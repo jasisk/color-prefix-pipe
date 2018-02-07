@@ -1,3 +1,4 @@
+#include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -23,14 +24,37 @@ int main(int argc, char* argv[]) {
   size_t num_of_entries=0;
 
   if (isatty(fileno(stdin))) {
+    puts("usage: precolor [-d delimiter]\n\t-d delimiter: specify a delimiter, defaults to tab");
     return 0;
+  }
+
+  char delimiter = DELIMITER;
+
+  int opt;
+  while ((opt = getopt(argc, argv, "d:")) != -1) {
+    switch (opt) {
+      case 'd':
+        delimiter = *optarg;
+        break;
+      case '?':
+        if (optopt == 'd') {
+          fprintf(stderr, "Option -%c requires an argument.\n", optopt);
+        } else if (isprint(optopt)) {
+          fprintf(stderr, "Option -%c unknown.\n", optopt);
+        } else {
+          fprintf(stderr, "Unknown option character `\\x%x'.\n", optopt);
+        }
+        return 1;
+      default:
+        abort();
+    }
   }
 
   char **prefixes = malloc(num_of_entries * sizeof(char*));
 
   while (fgets(buffer, BUFFERSIZE, stdin) != NULL) {
     char *cp = &buffer[0];
-    char *token = strchr(buffer, DELIMITER);
+    char *token = strchr(buffer, delimiter);
     if (token == NULL) {
       fputs(buffer, stdout);
       continue;
@@ -51,7 +75,8 @@ int main(int argc, char* argv[]) {
       token[len+1] = '\0';
       prefixes[num_of_entries++] = token;
     }
-    printf("%s%s" RESET "%s", colors[i % colors_length], token, cp+len);
+    printf("%s%s" RESET "%s", colors[i % colors_length], token, &cp[len]);
+    fflush(stdout);
   }
 
   // free(prefixes);
