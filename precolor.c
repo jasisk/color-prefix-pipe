@@ -25,8 +25,7 @@ int main(int argc, char* argv[]) {
   char **prefixes = malloc(num_of_entries * sizeof(char*));
 
   while (fgets(buffer, BUFFERSIZE, stdin) != NULL) {
-    char *cp = strdup(buffer);
-    char *ptr = cp;
+    char *cp = &buffer[0];
     char *token = strsep(&cp, DELIMITER);
     int i;
     for (i = 0; i < num_of_entries;) {
@@ -41,7 +40,6 @@ int main(int argc, char* argv[]) {
       prefixes[num_of_entries++] = strdup(token);
     }
     printf("%s%s" RESET DELIMITER "%s", a[i % len], token, cp);
-    free(ptr);
   }
 
   free(prefixes);
