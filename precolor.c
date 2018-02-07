@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
-// #include <stddef.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #define BUFFERSIZE 2048
 #define DELIMITER '\t'
@@ -22,10 +22,13 @@ int main(int argc, char* argv[]) {
   char buffer[BUFFERSIZE];
   size_t num_of_entries=0;
 
+  if (isatty(fileno(stdin))) {
+    return 0;
+  }
+
   char **prefixes = malloc(num_of_entries * sizeof(char*));
 
   while (fgets(buffer, BUFFERSIZE, stdin) != NULL) {
-    puts("ugh");
     char *cp = &buffer[0];
     char *token = strchr(buffer, DELIMITER);
     if (token == NULL) {
