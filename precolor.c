@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
       prefixes = realloc(prefixes, (num_of_entries + 1) * sizeof(char*));
       token = malloc(len+1);
       memcpy(token, cp, len);
-      token[len+1] = '\0';
+      token[len] = '\0';
       prefixes[num_of_entries++] = token;
     }
     printf("%s%s" RESET "%s", colors[i % colors_length], token, &cp[len]);
