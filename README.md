@@ -20,7 +20,7 @@ Options
 
 -d
 
-:   Specify a delimiter (default is **\t**).
+:   Specify a delimiter (default is "\\t").
 
 		The delimiter must be a single character.
 
